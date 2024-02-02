@@ -31,6 +31,7 @@
         table {
             margin: auto;
             border-collapse: collapse;
+            background-color: #FFFFFF;
         }
 
         th,
@@ -50,11 +51,11 @@
         }
 
         td:nth-child(3) {
-            width: 200px;
+            width: 100px;
         }
 
         td:nth-child(4) {
-            width: 120px;
+            width: 100px;
         }
 
         #desc_tabela {

@@ -47,7 +47,7 @@
             color: white;
             padding: 10px 15px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
             width: 100%;
             margin-top: 10px;
@@ -57,11 +57,19 @@
             background-color: #45a049;
         }
 
+        #idUpdate {
+            width: 70%;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid black;
+            margin: auto;
+        }
+
         #campoExtra {
             width: 70%;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
+            border: 1px solid black;
             margin: auto;
 
         }
@@ -87,12 +95,18 @@
 
         <label for="modificacao">Escolha uma informação para ser modificada</label>
         <select name="modificacao" id="modificacao" onchange="mostrarCampo()">
+            <option value="" selected disabled>Escolha uma opção</option>
             <option value="responsavel">Id do responsável</option>
             <option value="descricao">Descrição</option>
             <option value="prioridade">Prioridade</option>
             <option value="estado">Estado</option>
         </select>
 
+
+
+
+        <br>
+        <br>
         <div id="campoExtra"></div>
 
         <br>
@@ -118,10 +132,10 @@
                 campoExtra.innerHTML = '<label for="novoValor">Novo Valor:</label><input type="number" id="novoValor" name="novoValor" required>';
             } else if (modificacaoSelecionada === "prioridade") {
                 // Se escolher alterar a prioridade, mostrar um dropdown com as opções
-                campoExtra.innerHTML = '<label for="novoValor">Novo Valor:</label><select id="novoValor" name="novoValor" required><option value="Alta">Alta</option><option value="Media">Média</option><option value="Baixa">Baixa</option></select>';
+                campoExtra.innerHTML = '<label for="novoValor">Nova prioridade:</label><select id="novoValor" name="novoValor" required><option value="Alta">Alta</option><option value="Media">Média</option><option value="Baixa">Baixa</option></select>';
             } else if (modificacaoSelecionada === "estado") {
                 // Se escolher alterar o estado, mostrar um dropdown com as opções
-                campoExtra.innerHTML = '<label for="novoValor">Novo Valor:</label><select id="novoValor" name="novoValor" required><option value="Pendente">Pendente</option><option value="Em andamento">Em Andamento</option><option value="Concluido">Concluído</option></select>';
+                campoExtra.innerHTML = '<label for="novoValor">Novo estado:</label><select id="novoValor" name="novoValor" required><option value="Pendente">Pendente</option><option value="Em andamento">Em Andamento</option><option value="Concluido">Concluído</option></select>';
             } else if (modificacaoSelecionada === "descricao") {
                 // Se escolher alterar a descrição, mostrar um input type text
                 campoExtra.innerHTML = '<label for="novoValor">Nova Descrição:</label><input type="text" id="novoValor" name="novoValor" required>';
@@ -132,34 +146,36 @@
             window.location.href = 'menu.html';
         }
 
-        function realizar_acao() {
-            var idMudar = document.querySelector("#idUpdate").value;
-            var opcaoSelecionada = document.querySelector('input[name="acao"]:checked').value;
-            var modificacaoSelecionada = document.getElementById("modificacao").value;
-            var novoValor = document.getElementById("novoValor").value;
-
-            fetch('processar_mudanca.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    'idUpdate': idMudar,
-                    'acao': opcaoSelecionada,
-                    'modificacao': modificacaoSelecionada,
-                    'novoValor': novoValor,
-                }),
-            })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data);
-                })
-                .catch(error => {
-                    console.error('Erro na requisição:', error);
-                });
-              
-                alert("Ação Realizada com sucesso")
+        function realizarAlteracao() {
+            validarAcao('alterar');
         }
+
+        function realizarRemocao() {
+            validarAcao('remover');
+        }
+
+        function validarAcao(acao) {
+            var idMudar = document.querySelector("#idUpdate").value;
+
+            if (!idMudar) {
+                alert("Por favor, preencha o ID.");
+                return;
+            }
+
+            if (acao === 'alterar') {
+                var modificacaoSelecionada = document.getElementById("modificacao").value;
+                var novoValor = document.getElementById("novoValor").value;
+
+                // Verificar se o usuário selecionou uma opção válida para 'alterar'
+                if (modificacaoSelecionada === "") {
+                    alert("Por favor, selecione uma opção válida para alterar.");
+                    return;
+                }
+            }
+
+
+        }
+
     </script>
 
 
