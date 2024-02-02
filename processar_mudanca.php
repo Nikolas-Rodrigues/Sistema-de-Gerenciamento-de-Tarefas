@@ -18,22 +18,22 @@ if ($mysqli->connect_errno) {
         if (!is_numeric($idMudar) || $idMudar < 0) {
             echo "ID inválido.";
         } else {
-            if ($opcaoSelecionada === 'alterar') {
-                $query = "UPDATE Tarefa SET $modificacaoSelecionada = '$novoValor' WHERE id = $idMudar";
-            } elseif ($opcaoSelecionada === 'remover') {
-                $query = "DELETE FROM Tarefa WHERE id = $idMudar";
-            } else {
-                echo "Opção inválida.";
-                exit;
+            if ($opcaoSelecionada === 'remover') {
+                $query = "DELETE FROM Tarefa WHERE id = $idMudar";}
+                if ($mysqli->query($query)) {
+                    echo "Tarefa removida com sucesso!";
+                } else {
+                    echo "Erro ao remover tarefa: " . $mysqli->error;
+                }
             }
-
-            if ($mysqli->query($query)) {
-                echo ($opcaoSelecionada === 'alterar') ? "Mudança realizada com sucesso!" : "Tarefa removida com sucesso!";
-            } else {
-                echo "Erro: " . $mysqli->error;
-            }
+                if ($opcaoSelecionada === 'alterar') {
+                    $query = "UPDATE Tarefa SET $modificacaoSelecionada = '$novoValor' WHERE id = $idMudar";
+                    if ($mysqli->query($query)) {
+                        echo "Mudança realizada com sucesso!";
+                    } else {
+                        echo "Erro: " . $mysqli->error;
+                    }
         }
     }
     $mysqli->close();
 }
-?>
