@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: lightgray;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        div {
+            max-width: 400px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #campoExtra {
+            width: 70%;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+            margin: auto;
+
+        }
+    </style>
+</head>
+
+<body bgcolor="lightgray">
+
+    <div>
+        <h2>Alterações no banco de dados</h2>
+
+        <br>
+        <br>
+        <text>Id da Tarefa que será modificada</text>
+        <br>
+        <input type="Number" id="idUpdate" class="input1">
+
+        <br>
+        <br>
+        <input type="radio" id="alterar" name="acao" value="alterar">
+        <label for="alterar">Alterar informações da Tarefa</label><br>
+
+        <label for="modificacao">Escolha uma informação para ser modificada</label>
+        <select name="modificacao" id="modificacao" onchange="mostrarCampo()">
+            <option value="responsavel">Id do responsável</option>
+            <option value="descricao">Descrição</option>
+            <option value="prioridade">Prioridade</option>
+            <option value="estado">Estado</option>
+        </select>
+
+        <div id="campoExtra"></div>
+
+        <br>
+        <br>
+
+        <input type="radio" id="remover" name="acao" value="remover">
+        <label for="remover">Remover Tarefa</label><br>
+        <br>
+
+        <br>
+        <button onclick="alterar_estado()">Realizar Mudança</button>
+        <br>
+        <button onclick="redirecionarParaHome()">Ir para Home</button>
+    </div>
+
+    <script>
+        function mostrarCampo() {
+            var modificacaoSelecionada = document.getElementById("modificacao").value;
+            var campoExtra = document.getElementById("campoExtra");
+
+            // Limpar qualquer conteúdo existente
+            campoExtra.innerHTML = "";
+
+            if (modificacaoSelecionada === "responsavel") {
+                // Se escolher alterar o id do responsável, mostrar um input type number
+                campoExtra.innerHTML = '<label for="novoValor">Novo Valor:</label><input type="number" id="novoValor" name="novoValor" required>';
+            } else if (modificacaoSelecionada === "prioridade") {
+                // Se escolher alterar a prioridade, mostrar um dropdown com as opções
+                campoExtra.innerHTML = '<label for="novoValor">Novo Valor:</label><select id="novoValor" name="novoValor" required><option value="Alta">Alta</option><option value="Media">Média</option><option value="Baixa">Baixa</option></select>';
+            } else if (modificacaoSelecionada === "estado") {
+                // Se escolher alterar o estado, mostrar um dropdown com as opções
+                campoExtra.innerHTML = '<label for="novoValor">Novo Valor:</label><select id="novoValor" name="novoValor" required><option value="Pendente">Pendente</option><option value="Em_andamento">Em Andamento</option><option value="Concluido">Concluído</option></select>';
+            } else if (modificacaoSelecionada === "descricao") {
+                // Se escolher alterar a descrição, mostrar um input type text
+                campoExtra.innerHTML = '<label for="novoValor">Nova Descrição:</label><input type="text" id="novoValor" name="novoValor" required>';
+            }
+        }
+
+        function redirecionarParaHome() {
+            window.location.href = 'menu.html';
+        }
+
+        function alterar_estado() {
+            var idMudar = document.querySelector("#idUpdate").value;
+            var opcaoSelecionada = document.querySelector('input[name="acao"]:checked').value;
+            var modificacaoSelecionada = document.getElementById("modificacao").value;
+            var novoValor = document.getElementById("novoValor").value;
+
+            // Realizar a mudança no banco de dados
+            fetch('processar_mudanca.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'idUpdate': idMudar,
+                    'acao': opcaoSelecionada,
+                    'modificacao': modificacaoSelecionada,
+                    'novoValor': novoValor,
+                }),
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data); // Exibir a resposta do servidor (pode ser uma mensagem de sucesso ou erro)
+            })
+            .catch(error => {
+                console.error('Erro na requisição:', error);
+            });
+        }
+    </script>
+</body>
+
+</html>
