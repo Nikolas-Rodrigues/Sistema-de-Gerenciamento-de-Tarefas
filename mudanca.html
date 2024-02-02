@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu</title>
+    <title>Alterar DataBase</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -81,8 +81,9 @@
 
         <br>
         <br>
+        <label for="alterar">Alterar informações da Tarefa</label>
         <input type="radio" id="alterar" name="acao" value="alterar">
-        <label for="alterar">Alterar informações da Tarefa</label><br>
+
 
         <label for="modificacao">Escolha uma informação para ser modificada</label>
         <select name="modificacao" id="modificacao" onchange="mostrarCampo()">
@@ -95,14 +96,11 @@
         <div id="campoExtra"></div>
 
         <br>
-        <br>
-
+        <br> <label for="remover">Remover Tarefa</label>
         <input type="radio" id="remover" name="acao" value="remover">
-        <label for="remover">Remover Tarefa</label><br>
-        <br>
 
-        <br>
-        <button onclick="alterar_estado()">Realizar Mudança</button>
+
+        <button onclick="realizar_acao()">Realizar Ação</button>
         <br>
         <button onclick="redirecionarParaHome()">Ir para Home</button>
     </div>
@@ -123,7 +121,7 @@
                 campoExtra.innerHTML = '<label for="novoValor">Novo Valor:</label><select id="novoValor" name="novoValor" required><option value="Alta">Alta</option><option value="Media">Média</option><option value="Baixa">Baixa</option></select>';
             } else if (modificacaoSelecionada === "estado") {
                 // Se escolher alterar o estado, mostrar um dropdown com as opções
-                campoExtra.innerHTML = '<label for="novoValor">Novo Valor:</label><select id="novoValor" name="novoValor" required><option value="Pendente">Pendente</option><option value="Em_andamento">Em Andamento</option><option value="Concluido">Concluído</option></select>';
+                campoExtra.innerHTML = '<label for="novoValor">Novo Valor:</label><select id="novoValor" name="novoValor" required><option value="Pendente">Pendente</option><option value="Em andamento">Em Andamento</option><option value="Concluido">Concluído</option></select>';
             } else if (modificacaoSelecionada === "descricao") {
                 // Se escolher alterar a descrição, mostrar um input type text
                 campoExtra.innerHTML = '<label for="novoValor">Nova Descrição:</label><input type="text" id="novoValor" name="novoValor" required>';
@@ -134,13 +132,12 @@
             window.location.href = 'menu.html';
         }
 
-        function alterar_estado() {
+        function realizar_acao() {
             var idMudar = document.querySelector("#idUpdate").value;
             var opcaoSelecionada = document.querySelector('input[name="acao"]:checked').value;
             var modificacaoSelecionada = document.getElementById("modificacao").value;
             var novoValor = document.getElementById("novoValor").value;
 
-            // Realizar a mudança no banco de dados
             fetch('processar_mudanca.php', {
                 method: 'POST',
                 headers: {
@@ -153,15 +150,19 @@
                     'novoValor': novoValor,
                 }),
             })
-            .then(response => response.text())
-            .then(data => {
-                console.log(data); // Exibir a resposta do servidor (pode ser uma mensagem de sucesso ou erro)
-            })
-            .catch(error => {
-                console.error('Erro na requisição:', error);
-            });
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.error('Erro na requisição:', error);
+                });
+              
+                alert("Ação Realizada com sucesso")
         }
     </script>
+
+
 </body>
 
 </html>
